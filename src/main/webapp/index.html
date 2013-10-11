@@ -1,0 +1,302 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css"/>
+        <link rel="stylesheet" href="jqwidgets/styles/jqx.base.css" type="text/css"/>
+        <link rel="stylesheet" href="jqwidgets/styles/jqx.bootstrap.css" type="text/css">
+        
+        <title>ABM</title>
+
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="js/jquery-2.0.3.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/gettheme.js"></script>
+        <script src="jqwidgets/jqxcore.js"></script>
+        <script src="jqwidgets/jqxinput.js"></script>
+        <script src="jqwidgets/jqxnumberinput.js"></script>
+        <script src="jqwidgets/jqxbuttons.js"></script>
+        <script src="jqwidgets/jqxgrid.js"></script>
+        <script src="jqwidgets/jqxdata.js"></script>
+        <script src="jqwidgets/jqxgrid.selection.js"></script>
+        <script src="jqwidgets/jqxscrollbar.js"></script>
+        <script src="jqwidgets/jqxmenu.js"></script>
+        <script src="jqwidgets/jqxvalidator.js"></script>
+        <script src="jqwidgets/jqxgrid.sort.js"></script>
+        <script src="jqwidgets/jqxdatetimeinput.js"></script>
+        <script src="jqwidgets/jqxcalendar.js"></script>
+        <script src="jqwidgets/jqxcombobox.js"></script>
+        <script src="jqwidgets/jqxlistbox.js"></script>
+        <script src="jqwidgets/jqxgrid.filter.js"></script>
+        <script src="jqwidgets/jqxdropdownlist.js"></script>
+        <script src="jqwidgets/jqxwindow.js"></script>
+        <script src="jqwidgets/jqxgrid.edit.js"></script>
+        <script src="jqwidgets/jqxgrid.aggregates.js"></script>
+        <script src="js/underscore-min.js"></script>
+        <script src="js/backbone.js"></script>
+
+
+    </head>
+    <body>
+        <!--Template Formulario Ventas-->
+        <script type="text/template" id="venta-form-temp">
+            <form name="ventas-form">
+                <table class="table-hover"  style="float: top">
+                    <tbody>
+                        <tr>
+                            <td><label class="label">Fecha</label></td>
+                            <td><div id="v-date"></div></td>
+                        </tr>
+                        <tr>
+                            <td><label class="label">Cliente</label></td>
+                            <td><div id="v-cliente"></div></td>
+                        </tr>
+                        <tr>
+                            <td><label class="label">CI</label></td>
+                            <td><input class="input-group" id="v-cci" disabled></td>
+                        </tr>
+                        <tr>
+                            <td><label class="label">Nombre</label></td>
+                            <td><input class="input-group" id="v-cnombre" disabled></td>
+                        </tr>
+                        
+                        
+                    </tbody>
+                </table>
+                   <div style="float: right" id="v-paddrow">+</div>
+                    <div id="v-detalle" style:"float: left"></div>
+                
+            </form>
+            
+            <div id="v-popupProd">
+                    <div class="label-success">Producto</div>
+                        <div>
+                            <table>
+                                <tr>
+                                    <td align="left"><label class="label">Producto:</label></td>
+                                    <td align="left"><div id="v-prod"></div></td>
+                                </tr>
+                                <tr>
+                                    <td align="left"><label class="label">Cod:</label></td>
+                                    <td align="left"><input id="v-pid" /></td>
+                                </tr>
+                                <tr>
+                                    <td align="left"><label class="label">Producto:</label></td>
+                                    <td align="left"><input id="v-pnombre" /></td>
+                                </tr>
+                                <tr>
+                                    <td align="left"><label class="label">Precio:</label></td>
+                                    <td align="left"><input id="v-pprecio"></td>
+                                </tr>
+                                <tr>
+                                    <td align="left"><label class="label">Cantidad:</label></td>
+                                    <td align="left"><div id="v-pcantidad"></div></td>
+                                </tr>
+                                <tr>
+                                    <td align="left"><label class="label">Descripcion:</label></td>
+                                    <td align="left"><input id="v-pdescripcion"></div></td>
+                                </tr>
+                                <tr>
+                                    <td align="right"></td>
+                                    <td style="padding-top: 10px;" align="right"><input class="btn-success" style="margin-right: 5px;" type="button" id="v-pguardar" value="Agregar" /><input class="btn-danger" id="v-pcancelar" type="button" value="Cancelar" /></td>
+                                </tr>
+                            </table>
+                        </div>
+                   </div>
+        </script>
+        <!--Template Formulario Producto-->
+        <script type="text/template" id="producto-form-temp"> 
+            <div class="container producto-view-form">
+            <form class="form-group" id="producto-form">
+            <table class="table-hover">
+            <tr class="row">
+            <td class="col">
+            <label class="label">Producto</label>
+            </td>
+            <td class="col">
+            <input class="input-group" type="text" id="p-nombre" >
+            </td>
+            </tr>
+            <tr class="row">
+            <td class="col">
+            <label class="label">Precio</label>
+            </td>
+            <td class="col">
+            <input class="input-group" type="text" id="p-precio" >
+            </td>
+            </tr>
+             <tr class="row">
+            <td class="col">
+            <label class="label">Stock</label>
+            </td>
+            <td class="col">
+            <input class="input-group" type="text" id="p-stock" >
+            </td>
+            </tr>
+            <tr class="row">
+            <td class="col">
+            <label class="label">Descripcion</label>
+            </td>
+            <td class="col">
+            <input class="input-group" type="text"  id="p-desc">
+            </td>
+            </tr>
+            </table>
+            </form>
+            </div>
+        </script> 
+        <!--Template Formulario Cliente-->
+        <script type="text/template" id="cliente-form-temp"> 
+            <div class="container cliente-view-form">
+            <form class="form-group" id="cliente-form">
+            <table class="table-hover">
+            <tr class="row">
+            <td class="col">
+            <label class="label">Cliente</label>
+            </td>
+            <td class="col">
+            <input class="input-group" type="text" id="c-nombre" >
+            </td>
+            </tr>
+            <tr class="row">
+            <td class="col">
+            <label class="label">CI</label>
+            </td>
+            <td class="col">
+            <input class="input-group" type="text" id="c-ci" >
+            </td>
+            </tr>
+			<tr class="row">
+            <td class="col">
+            <label class="label">Telefono</label>
+            </td>
+            <td class="col">
+            <input class="input-group" type="text" id="c-tel" >
+            </td>
+            </tr>
+            <tr class="row">
+            <td class="col">
+            <label class="label">Direccion</label>
+            </td>
+            <td class="col">
+
+            <input class="input-group" type="text"  id="c-dir">
+            </td>
+            </tr>
+            </table>
+            </form>
+            </div>
+        </script>
+        <!--Template Formulario Pagos-->
+        <script type="text/template" id="pagos-form-temp"> 
+            <div class="container pago-view-form">
+            <form class="form-group" id="pago-form">
+            <table class="table-hover">
+            <tr class="row">
+            <td class="col">
+            <label class="label">Venta</label>
+            </td>
+            <td class="col">
+            <input class="input-group" type="text" id="pg-idVenta" >
+            </td>
+            </tr>
+<!--            <tr class="row">
+            <td class="col">
+            <label class="label">Fecha</label>
+            </td>
+            <td class="col">
+            <input class="input-group" type="text" id="pg-fecha" >
+            </td>
+            </tr>
+			<tr class="row">
+            <td class="col">
+            <label class="label">Monto</label>
+            </td>
+            <td class="col">
+            <input class="input-group" type="text" id="pg-monto" >
+            </td>
+            </tr>-->
+            </table>
+            </form>
+            </div>
+        </script>        
+        <!--Template Opciones-->
+        <script type="text/template" id="options-temp">
+            <div>
+            <table  class="table"  style="border-bottom: thin solid #DDDDDD">
+            <tr class="row">
+            <td class="col">
+            <button class="btn btn-success" type="button" id="nuevo-btn">Nuevo</button>
+            </td>
+            <td class="col">
+            <button class="btn btn-success" type="button" id="editar-btn">Editar</button>
+            </td>
+            <td class="col">
+            <button class="btn btn-success" type="button" id="guardar-btn">Guardar</button>
+            </td>
+            <td class="col">
+            <button class="btn btn-success" type="button" id="borrar-btn">Borrar</button>
+            </td>
+            </tr>
+            </table>
+            </div>
+        </script>
+        <!--Template Tabla Producto-->
+        <script type="text/template" id="tabla-prod-temp">
+            <h4 class="h4">Productos</h4>
+            <div id="table-productos"></div>
+        </script>
+        <!--Template Tabla Clientes-->
+        <script type="text/template" id="tabla-client-temp">
+            <div id="table-clientes"></div>
+        </script>
+        <!--Template Tabla Ventas-->
+        <script type="text/template" id="tabla-vent-temp">
+            <h4 class="h4">Ventas</h4>
+            <div id="table-ventas"></div>
+        </script>
+        <!--Template Tabla Pagos-->
+        <script type="text/template" id="tabla-pagos-temp">
+            <div id="table-pagos"></div>
+        </script>
+        <!--Template Tabla Navegacion-->
+        <script type="text/template" id="nav-temp">
+                <div>
+                    <table class="table" cellspacing="10px" style="border-bottom: thin solid #DDDDDD;border-left: thin solid #DDDDDD">
+                        <tr class="row">
+                            <td class="col"><input type="button" class="btn btn-danger" id="client-btn" value="Clientes" /></td>
+                        </tr>
+                        <tr class="row">
+                            <td class="col"><input type="button" class="btn btn-danger" id="prod-btn" value="Productos" /></td>
+                        </tr>
+                        <tr class="row">
+                            <td class="col"><input type="button" class="btn btn-danger" id="vent-btn" value="Ventas" /></td>
+                        </tr>
+                        <tr class="row">
+                            <td class="col"><input type="button" class="btn btn-danger" id="pag-btn" value="Pagos" /></td>
+                        </tr>
+                    </table>
+                </div>
+        </script>
+        <!--Cuerpo de la Pagina-->
+        <div class="container">
+            
+            <!-- -->
+            
+            <!-- -->
+            <h2 class="text-info">ABM</h2>
+            <hr>
+            <div id="navigation-container" style="float: left">
+            </div>
+            <div id="abm-container" style="float: left;border-left: thin solid #DDDDDD;border-right:  thin solid #DDDDDD" >
+                <div id="option-container"></div>
+                <div id="form-container" style="float: left; border-right: thick solid #ffffff;border-left: thick solid #ffffff"></div>
+                <div id="table-container" style="float: left"></div>
+            </div>
+        </div>
+        <script src="js/index.js"></script>
+    </body>
+</html>
