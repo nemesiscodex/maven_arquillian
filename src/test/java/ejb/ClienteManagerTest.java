@@ -21,6 +21,7 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.ByteArrayAsset;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.runner.RunWith;
 
 /**
@@ -29,7 +30,7 @@ import org.junit.runner.RunWith;
  */
 @RunWith(Arquillian.class)
 public class ClienteManagerTest {
-    @Inject
+    @EJB
     ClienteManager container;
     public ClienteManagerTest() {
     }
@@ -51,11 +52,11 @@ public class ClienteManagerTest {
     }
 
     @Deployment
-    public static JavaArchive createTestArchive() {
-        return  ShrinkWrap.create(JavaArchive.class)
+    public static WebArchive createTestArchive() {
+        return  ShrinkWrap.create(WebArchive.class, "test.war")
             .addPackage(ClienteManager.class.getPackage())
-            .addAsManifestResource("META-INF/persistence.xml")
-            //.addAsManifestResource("META-INF/persistence.xml")
+            .addAsManifestResource("persistence.xml")
+            .addAsManifestResource("glassfish-resources.xml")
             .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
     
@@ -83,12 +84,9 @@ public class ClienteManagerTest {
     public void testGuardar() throws Exception {
         System.out.println("Guardar");
         Cliente in = null;
-        EJBContainer container = javax.ejb.embeddable.EJBContainer.createEJBContainer();
-        ClienteManager instance = (ClienteManager)container.getContext().lookup("java:global/classes/ClienteManager");
         boolean expResult = false;
-        boolean result = instance.Guardar(in);
+        boolean result = container.Guardar(in);
         assertEquals(expResult, result);
-        container.close();
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
@@ -116,15 +114,16 @@ public class ClienteManagerTest {
      * Test of Listar method, of class ClienteManager.
      */
     @org.junit.Test
-    @org.junit.Ignore
+    //@org.junit.Ignore
     public void testListar() {
-        /*System.out.println("Listar");
+        System.out.println("Listar");
         String tabla = "Cliente";
         List expResult = null;
-        List result = null;//container.Listar(tabla);
+        System.out.println(container.em);
+        List result = container.Listar(tabla);
         //assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");*/
+        fail("The test case is a prototype.");
     }
 
     /**
